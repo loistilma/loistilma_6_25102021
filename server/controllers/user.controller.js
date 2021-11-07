@@ -1,6 +1,16 @@
 const User = require('../models/user.model')
 const jwt = require('jsonwebtoken')
 
+const errorValidationFormatter = (e) => {
+    const err = []
+    const errStr = e.substring(e.indexOf(':') + 1).trim()
+    const errArray = errStr.split(',').map(e => e.trim())
+    errArray.forEach(e => {
+        err.push(e.substring(e.indexOf(':') + 1).trim() + '\n')
+    })
+    return err.join('')
+}
+
 exports.signup = async (req, res, next) => {
 	const user = new User({
 		email: req.body.email,
@@ -11,7 +21,7 @@ exports.signup = async (req, res, next) => {
         await user.save()
         res.status(201).json({ message: 'Utilisateur créé !' })
     } catch (e) {
-        res.status(400).json(e.message)
+        res.status(400).json({ message: errorValidationFormatter(e.message) })
     }
 }
 
