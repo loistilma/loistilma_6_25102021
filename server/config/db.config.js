@@ -24,7 +24,7 @@ module.exports = () => {
 
     process.on('SIGINT', () => {
         connection.close(() => {
-            console.log('Mongoose connection closed on Application Timeout');
+            console.log('Mongoose connection closed on Application Timeout')
             process.exit(0)
         })
     })
