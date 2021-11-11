@@ -37,14 +37,16 @@ exports.create = async (req, res, next) => {
 
 exports.modify = async (req, res, next) => {
     const serverUrl = `${req.protocol}://${req.get('host')}/`
-    var sauceObject = {}
+
     try{
+        var sauceObject = {}
+        
         if(req.file){
             const sauceFound = await Sauce.findOne({ _id: req.params.id })
             file.del(sauceFound.imageUrl)
             sauceObject = { ...JSON.parse(req.body.sauce), imageUrl: serverUrl + req.file.path }
         }else{
-            sauceObject = { ...req.body.sauce }
+            sauceObject = { ...req.body }
         }
         await Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
         res.status(200).json({ message: 'Sauce modifié !'})
